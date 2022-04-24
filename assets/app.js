@@ -24,8 +24,6 @@ $form.addEventListener('submit', async (e) => {
 
   if (connected) {
     disconnect()
-    $joinButton.disabled = false
-    $joinButton.innerText = 'Join the room'
     return
   }
 
@@ -37,14 +35,10 @@ $form.addEventListener('submit', async (e) => {
 
   try {
     await connect({username})
-    $joinButton.disabled = false
-    $joinButton.innerText = 'Leave the room'
   } catch (e) {
     console.error(e)
-
     alert('Failed to connect')
-    $joinButton.disabled = false
-    $joinButton.innerText = 'Join the room'
+    enableButton()
   }
 })
 
@@ -58,27 +52,41 @@ async function connect ({username}) {
   })
 
   const data = await response.json()
-  room = await Twilio.Video.connect(data.token)
+  await connectWithToken(data.token)
+}
+
+async function connectWithToken (token) {
+  room = await Twilio.Video.connect(token)
   room.participants.forEach(participantConnected)
   room.on('participantConnected', participantConnected)
   room.on('participantDisconnected', participantDisconnected)
   connected = true
   updateParticipantCount()
+  enableButton('Leave the room')
+}
+
+function enableButton (text = 'Join the room') {
+  $joinButton.disabled = false
+  $joinButton.innerText = text
 }
 
 function disconnect () {
   room.disconnect()
   // quitar la cámara de los divs
   connected = false
-  updateParticipantCount()
+  $container.querySelectorAll('.participant:not([id=local])').forEach(element => {
+    element.remove()
+  })
+  enableButton()
+  updateParticipantCount(0)
 }
 
-function updateParticipantCount () {
-  $count.innerHTML = `${room.participants.size + 1} online users`
+function updateParticipantCount (count = -1) {
+  $count.innerHTML = `${count == -1 ? room.participants.size + 1 : 0} online users`
 }
 
 function participantConnected (participant) {
-  const template = `<div id='participant-${participant.id}' class="participant">
+  const template = `<div id='participant-${participant.sid}' class="participant">
     <div class="video"></div>
     <div>${participant.identity}</div>
   </div>`
@@ -101,5 +109,7 @@ function attachTrack (track) {
 }
 
 function participantDisconnected (participant) {
-  console.log('participant disconnected')
+  $(`#participant-${participant.sid}`).remove()
+  updateParticipantCount()
+  //console.log('participant disconnected')
 }
