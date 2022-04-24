@@ -18,6 +18,7 @@ async function addLocalVideo () {
 }
 
 addLocalVideo()
+readTokenFromLocal()
 
 $form.addEventListener('submit', async (e) => {
   e.preventDefault()
@@ -52,6 +53,8 @@ async function connect ({username}) {
   })
 
   const data = await response.json()
+  localStorage.setItem('token', data.token)
+  localStorage.setItem('username', username)
   await connectWithToken(data.token)
 }
 
@@ -63,6 +66,14 @@ async function connectWithToken (token) {
   connected = true
   updateParticipantCount()
   enableButton('Leave the room')
+}
+
+async function readTokenFromLocal () {
+  const token = localStorage.getItem('token')
+  if (token) {
+    $userNameInput.value = localStorage.getItem('username')
+    connectWithToken(token)
+  }
 }
 
 function enableButton (text = 'Join the room') {
@@ -77,6 +88,8 @@ function disconnect () {
   $container.querySelectorAll('.participant:not([id=local])').forEach(element => {
     element.remove()
   })
+  localStorage.clear()
+
   enableButton()
   updateParticipantCount(0)
 }
@@ -111,5 +124,4 @@ function attachTrack (track) {
 function participantDisconnected (participant) {
   $(`#participant-${participant.sid}`).remove()
   updateParticipantCount()
-  //console.log('participant disconnected')
 }
