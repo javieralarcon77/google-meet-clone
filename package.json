@@ -7,14 +7,33 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "twilio-run",
-    "deploy": "twilio-run deploy"
+    "dev": "react-scripts start",
+    "start": "twilio-run --port=4200",
+    "deploy": "npm run build && twilio-run deploy",
+    "build": "react-scripts build",
+    "postbuild": "rm ./assets/* -r -f && mv ./build/* ./assets/"
   },
   "dependencies": {
+    "@twilio/runtime-handler": "1.2.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "twilio": "3.56",
-    "@twilio/runtime-handler": "1.2.2"
+    "twilio-video": "^2.21.1"
   },
   "devDependencies": {
+    "react-scripts": "^5.0.1",
     "twilio-run": "3.4.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
