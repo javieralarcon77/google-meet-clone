@@ -1,8 +1,12 @@
 import React from 'react'
+import { RoomProvider } from './context/room.context'
+import { RoomScreen } from './screens/RoomScreen'
 
 export const App = () => {
   
   return (
-    <div><h1>Hola Mundo</h1></div>
+    <RoomProvider>
+      <RoomScreen />
+    </RoomProvider>
   )
 }
