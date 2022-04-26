@@ -1,0 +1,8 @@
+#container-home{
+  display: grid;
+  place-content: center;
+  min-height: 100vh;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
