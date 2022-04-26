@@ -10,13 +10,13 @@
     "dev": "react-scripts start",
     "start": "twilio-run --port=4200",
     "deploy": "npm run build && twilio-run deploy",
-    "build": "react-scripts build",
-    "postbuild": "rm ./assets/* -r -f && mv ./build/* ./assets/"
+    "build": "react-scripts build"
   },
   "dependencies": {
     "@twilio/runtime-handler": "1.2.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-router-dom": "^6.3.0",
     "twilio": "3.56",
     "twilio-video": "^2.21.1"
   },
