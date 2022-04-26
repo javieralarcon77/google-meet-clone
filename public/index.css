@@ -6,3 +6,13 @@ body {
   background: #f0f0f0;
   font-family: system-ui;
 }
+
+:root{
+  --primary: #54a1ff;
+  --primary-dark: #0877fd;
+  --error: red;
+  --gray: #eeeeee;
+  --gray-dark: #cccccc;
+  --black: #222222;
+  --white: #ffffff;
+}
