@@ -24,6 +24,11 @@ export const RoomProvider = ({children}) => {
     }
   }, [room])
 
+  useEffect(()=> {
+    const tokenLocal = localStorage.getItem('token')
+    if (tokenLocal) connectWithLocal(tokenLocal)
+  }, [])
+
   const submitConnect = async (username) => {
     if (connect) disconnectRoom()
     else connectRoom(username)
@@ -43,6 +48,8 @@ export const RoomProvider = ({children}) => {
     
       const data = await response.json()
       await connectWithToken(data.token)
+      localStorage.setItem('username', username)
+      localStorage.setItem('token', data.token)
       setUsername(username)
 
     } catch (e) {
@@ -57,8 +64,14 @@ export const RoomProvider = ({children}) => {
     setRoom(newRoom)
   }
 
+  const connectWithLocal = async (token) => {
+    const newRoom = await Video.connect(token)
+    setConnect(true)
+    setRoom(newRoom)
+    setUsername(localStorage.getItem('username'))
+  }
+
   const participantConnected = (participant)=> { 
-    console.log('conectado', participant)
     setParticipants(prev => {
       return [...prev, participant]
     })
@@ -85,7 +98,8 @@ export const RoomProvider = ({children}) => {
   const disconnectRoom = async () => {
     camOff()
     room.disconnect()
-
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
     setRoom(null)
     setConnect(false)
     setUsername('')
