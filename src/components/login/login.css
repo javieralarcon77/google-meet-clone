@@ -24,7 +24,7 @@
   border: 1px solid #ccc;
 }
 
-button {
+.login-button {
   border: none;
   border-radius: 5px;
   padding: 10px 15px;
@@ -32,9 +32,9 @@ button {
   color: #fff;
 }
 
-button:hover{
+.login-button:hover{
   background-color: #0877fd;
 }
-button:disabled{
+.login-button:disabled{
   background-color: #ccc;
 }

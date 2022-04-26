@@ -30,7 +30,7 @@ export const Login = () => {
           />
         </div>
         {isLoading && <div>Loading...</div>}
-        <button id="join" disabled={isLoading}>
+        <button className="login-button" id="join" disabled={isLoading}>
           { connect ? 'Desconectarme' : 'Conectarme' }
         </button>
       </form>
