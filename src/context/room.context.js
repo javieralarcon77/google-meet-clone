@@ -71,16 +71,31 @@ export const RoomProvider = ({children}) => {
     })
   }
 
-  const disconnectRoom = () => {
+  const camOff = () => {
+    const video = document.querySelector('#participant-local video')
+    video.pause()
+    video.srcObject.getTracks()[0].stop()
+
+    room.localParticipant.videoTracks.forEach(publication => {
+      publication.unpublish();
+      publication.track.stop();
+    });
+  }
+
+  const disconnectRoom = async () => {
+    camOff()
     room.disconnect()
+
     setRoom(null)
     setConnect(false)
+    setUsername('')
     setParticipants([])
   }
 
   return ( 
     <RoomContext.Provider 
       value={{
+        room,
         connect, 
         isLoading,
         username, 
