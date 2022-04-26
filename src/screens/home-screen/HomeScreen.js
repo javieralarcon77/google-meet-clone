@@ -5,7 +5,7 @@ import './home-screen.css';
 export const HomeScreen = () => {
   return (
     <div id="container-home">
-      <h1>Hola Mundo</h1>
+      <h1>Enter the username</h1>
       <Login />
     </div>
   )
