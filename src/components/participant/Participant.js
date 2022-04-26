@@ -1,10 +1,16 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 export const Participant = ({ participant,onSelectTrack, userSelect = '' }) => {
   const videoContainer = useRef(null)
+  const [showVideo, setShowVideo] = useState(false)
 
   const  attachTrack = (track) => {
     if (videoContainer.current.childElementCount !== 2){
+      if (track.kind === 'video'){
+        setShowVideo(true)
+        track.mediaStreamTrack.onmute = () => setShowVideo(false)
+        track.mediaStreamTrack.onunmute = () => setShowVideo(true)
+      }
       videoContainer.current.appendChild(track.attach())
     }
   }
@@ -33,7 +39,8 @@ export const Participant = ({ participant,onSelectTrack, userSelect = '' }) => {
 
   return (
     <div className={"participant " + (userSelect === participant.identity ? 'select' : '' ) } onClick={handleSelect}>
-      <div ref={videoContainer}></div>
+      <div ref={videoContainer} style={{display: showVideo ? 'block' : 'none'}}></div>
+      {!showVideo && <div className='user-icon'><div><img src="/icons/user.svg"/></div></div>}
       <div className="username">{participant.identity}</div>
     </div>
   )

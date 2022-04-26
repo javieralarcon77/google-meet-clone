@@ -9,49 +9,34 @@ import { Participant } from '../../components/participant/Participant'
 import './room-screen.css';
 
 export const RoomScreen = () => {
-  const { track: trackLocal} = useVideoLocal()
-  const { submitConnect, participants, room } = useContext(RoomContext)
-  const [trackSelect, setTrackSelect] = useState({username: 'local', track: undefined})
   const videoContainer = useRef(null)
+  const { submitConnect, participants, room } = useContext(RoomContext)
+  const { track: trackLocal, handleAudio, handleVideo, mediaStatus} = useVideoLocal(room)
+
+  const [trackSelect, setTrackSelect] = useState({username: 'local', track: undefined})
 
   useEffect(()=> {
-    if(trackSelect.track) {
+    const track = trackSelect.track
+    if(track) {
       const container = videoContainer.current
       container.childNodes.forEach(child => { container.removeChild(child) })
-      container.appendChild(trackSelect.track.attach())
+      container.appendChild(track.attach())
     }
   },[trackSelect])
 
   useEffect(()=> {
-    initialLocalTrack()
-  },[trackLocal])
-
-  const initialLocalTrack = () => {
     setTrackSelect({
       username: 'local',
       track: trackLocal,
     })
-  }
-
-  const handleVideo = () => {
-    room.localParticipant.videoTracks.forEach(publication => {
-      if (publication.track.isStopped) publication.track.restart({ facingMode: 'environment' });      
-      else publication.track.stop();
-    });
-  }
-
-  const handleAudio = () => {
-    room.localParticipant.audioTracks.forEach(publication => {
-      if (publication.track.isStopped) publication.track.restart({ facingMode: 'environment' });      
-      else publication.track.stop();
-    });
-  }
+  },[trackLocal])
 
   const handleDisconnect = () => {
     submitConnect()
   }
 
   const handleSelect = (track) => {
+    
     setTrackSelect(track)
   }
 
@@ -74,11 +59,19 @@ export const RoomScreen = () => {
         }
       </div>
       <div className="controls">
-        <button className="button-icon" onClick={handleAudio}>
-          <img src="/icons/mic.svg" alt="icon-mic"/>
+        <button className={`button-icon ${mediaStatus.audio ? '' : 'disabled'}`} onClick={handleAudio}>
+          {
+            mediaStatus.audio
+            ? <img src="/icons/mic.svg" alt="icon-mic"/>
+            : <img src="/icons/mic-mute.svg" alt="icon-mic"/>
+          }
         </button>
-        <button className="button-icon" onClick={handleVideo}>
-          <img src="/icons/camera.svg" alt="icon-camera"/>
+        <button className={`button-icon ${mediaStatus.video ? '' : 'disabled'}`} onClick={handleVideo}>
+          {
+            mediaStatus.video
+            ? <img src="/icons/camera.svg" alt="icon-camera"/>
+            : <img src="/icons/camera-off.svg" alt="icon-camera"/>
+          }
         </button>
         <button className="button-icon logout" onClick={handleDisconnect}>
           <img src="/icons/logout.svg" alt="icon-logout"/>
