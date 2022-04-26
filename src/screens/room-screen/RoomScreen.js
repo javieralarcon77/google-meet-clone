@@ -74,9 +74,15 @@ export const RoomScreen = () => {
         }
       </div>
       <div className="controls">
-        <button onClick={handleAudio}>MICROFONO</button>
-        <button onClick={handleVideo}>CAMARA</button>
-        <button onClick={handleDisconnect}>DISCONNECT</button>
+        <button className="button-icon" onClick={handleAudio}>
+          <img src="/icons/mic.svg" alt="icon-mic"/>
+        </button>
+        <button className="button-icon" onClick={handleVideo}>
+          <img src="/icons/camera.svg" alt="icon-camera"/>
+        </button>
+        <button className="button-icon logout" onClick={handleDisconnect}>
+          <img src="/icons/logout.svg" alt="icon-logout"/>
+        </button>
       </div>
     </div>
   )

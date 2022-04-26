@@ -4,47 +4,55 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #222222;
+  background-color: var(--black);
 }
 
 #video-principal{
   flex: 1;
-  max-height: 64vh;
+  max-height: calc(100vh - 260px);
 }
 #video-principal > div {
   display: grid;
   place-content: center;
   height: 100%;
+  overflow: hidden;
 }
 
 #video-principal video {
   width: 100%;
   aspect-ratio: 4/3;
+  min-width: 380px;
 }
 
 
 #container-participant {
-  width: 100%;
+  max-width: 100%;
   display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  margin-bottom: -5px;
+  padding-right: 20px;
 }
 .participant{
+  min-width: 180px;
   width: 180px;
   height: 160px;
   text-align: center;
   margin: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--gray-dark);
   overflow: hidden;
 }
 .participant.select{
-  border-color: #54a1ff;
+  border-color: var(--primary);
 }
 .participant video {
   width: 100%;
   aspect-ratio: 4/3;
 }
 .participant .username{
-  color: #fff;
+  color: var(--white);
   font-weight: 500;
   margin-bottom: 5px;
 }
@@ -53,6 +61,26 @@
   justify-content: center;
   height: 50px;
   padding: 10px 0px;
+}
+
+.button-icon {
+  background-color: var(--primary);
+  color: var(--white);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  display: grid;
+  place-content: center;
+  margin: 0px 5px;
+}
+
+.button-icon.logout{
+  background-color: var(--error);
+}
+
+.button-icon img{
+  filter: invert();
 }
 
 @media screen and (min-width: 990px) {
@@ -64,12 +92,19 @@
     max-width: calc(100vw - 370px);
     min-height: calc(100vh - 72px);
   }
+  #video-principal video{
+    min-width: 380px;
+  }
+
   #container-participant{
     width: 405px;
     border-left: 1px solid #ccc;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     grid-template-rows: max-content;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-bottom: 0;
   }
   .controls{
     border-top: 1px solid #ccc;
