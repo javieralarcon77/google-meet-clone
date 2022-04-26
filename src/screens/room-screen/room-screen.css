@@ -1,12 +1,78 @@
+#container-room{
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #222222;
+}
+
+#video-principal{
+  flex: 1;
+  max-height: 64vh;
+}
+#video-principal > div {
+  display: grid;
+  place-content: center;
+  height: 100%;
+}
+
+#video-principal video {
+  width: 100%;
+  aspect-ratio: 4/3;
+}
+
+
 #container-participant {
   width: 100%;
   display: flex;
 }
 .participant{
-  width: 33%;
+  width: 180px;
+  height: 160px;
   text-align: center;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+.participant.select{
+  border-color: #54a1ff;
 }
 .participant video {
-  width: 90%;
-  height: auto;
+  width: 100%;
+  aspect-ratio: 4/3;
+}
+.participant .username{
+  color: #fff;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.controls{
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  padding: 10px 0px;
+}
+
+@media screen and (min-width: 990px) {
+  #container-room{
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  #video-principal{
+    max-width: calc(100vw - 370px);
+    min-height: calc(100vh - 72px);
+  }
+  #container-participant{
+    width: 405px;
+    border-left: 1px solid #ccc;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-rows: max-content;
+  }
+  .controls{
+    border-top: 1px solid #ccc;
+    width: 100%;
+  }
 }
