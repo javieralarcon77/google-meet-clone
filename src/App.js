@@ -1,12 +1,12 @@
 import React from 'react'
 import { RoomProvider } from './context/room.context'
-import { RoomScreen } from './screens/RoomScreen'
+import { Root } from './route/root'
 
 export const App = () => {
   
   return (
     <RoomProvider>
-      <RoomScreen />
+      <Root />
     </RoomProvider>
   )
 }
