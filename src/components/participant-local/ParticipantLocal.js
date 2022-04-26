@@ -1,9 +1,7 @@
-import React, {useEffect, useRef, useContext} from 'react'
-import { RoomContext } from '../../context/room.context'
+import React, {useEffect, useRef} from 'react'
 
-export const ParticipantLocal = ({ track = undefined }) => {
+export const ParticipantLocal = ({ track = undefined, onSelectTrack, userSelect = '' }) => {
   const videoContainer = useRef(null)
-  const { room } = useContext(RoomContext)
 
   useEffect(()=>{
     if(track) {
@@ -12,18 +10,14 @@ export const ParticipantLocal = ({ track = undefined }) => {
     }
   }, [track])
 
-  const handleVideo = () => {
-    room.localParticipant.videoTracks.forEach(publication => {
-      if (publication.track.isStopped) publication.track.restart({ facingMode: 'environment' });      
-      else publication.track.stop();
-    });
+  const handleSelect = () => {
+    if(typeof onSelectTrack === 'function') onSelectTrack({track, username: 'local'})
   }
 
   return (
-    <div className="participant" id="participant-local">
-      <div>Yo</div>
+    <div className={"participant " + (userSelect === 'local' ? 'select' : '' ) } id="participant-local" onClick={handleSelect}>
       <div ref={videoContainer}></div>
-      <button onClick={handleVideo}>CAM</button>
+      <div className="username">Yo</div>
     </div>
   )
 }

@@ -1,10 +1,12 @@
 import React, {useEffect, useRef} from 'react'
 
-export const Participant = ({ participant }) => {
+export const Participant = ({ participant,onSelectTrack, userSelect = '' }) => {
   const videoContainer = useRef(null)
 
   const  attachTrack = (track) => {
-    videoContainer.current.appendChild(track.attach())
+    if (videoContainer.current.childElementCount !== 2){
+      videoContainer.current.appendChild(track.attach())
+    }
   }
 
   useEffect(()=>{
@@ -19,10 +21,20 @@ export const Participant = ({ participant }) => {
     }
   }, [participant])
 
+  const handleSelect = () => {
+    if(typeof onSelectTrack === 'function'){
+      let trackTemp 
+      participant.videoTracks.forEach(track => {
+        trackTemp = track.track
+      })
+      onSelectTrack({ track:trackTemp, username: participant.identity })
+    }
+  }
+
   return (
-    <div className="participant">
-      <div>{participant.identity}</div>
+    <div className={"participant " + (userSelect === participant.identity ? 'select' : '' ) } onClick={handleSelect}>
       <div ref={videoContainer}></div>
+      <div className="username">{participant.identity}</div>
     </div>
   )
 }
