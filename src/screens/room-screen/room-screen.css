@@ -1,0 +1,12 @@
+#container-participant {
+  width: 100%;
+  display: flex;
+}
+.participant{
+  width: 33%;
+  text-align: center;
+}
+.participant video {
+  width: 90%;
+  height: auto;
+}
