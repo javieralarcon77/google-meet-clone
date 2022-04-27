@@ -4,27 +4,7 @@
   min-height: 100vh;
   max-width: 800px;
   margin: 0 auto;
+  padding: 20px;
   text-align: center;
   gap: 10px;
-}
-
-#container-home .rooms{
-  list-style: none;
-  padding: 0;
-}
-
-#container-home .room-item {
-  border-bottom: 1px solid var(--gray);
-  padding: 10px 0px;
-  cursor: pointer;
-  transition: all 0.5s;
-}
-
-#container-home .room-item:hover {
-  background-color: var(--gray);
-  font-weight: 600;
-}
-
-#container-home .room-item:first-child{
-  border-top: 1px solid var(--gray);
 }
