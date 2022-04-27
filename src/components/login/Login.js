@@ -5,7 +5,7 @@ import './login.css'
 
 export const Login = () => {
   const [userNameInput, setUserNameInput] = useState('')
-  const { submitConnect, connect, isLoading, username } = useContext(RoomContext)
+  const { submitConnect, isLoading, username } = useContext(RoomContext)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -22,6 +22,7 @@ export const Login = () => {
         <div className='input-group'>
           <label>UserName</label>  
           <input 
+            disabled={username !== ''}
             id="userNameInput" 
             value={userNameInput} 
             onChange={(e)=>{ setUserNameInput(e.target.value) }}
@@ -31,7 +32,7 @@ export const Login = () => {
         </div>
         {isLoading && <div>Loading...</div>}
         <button className="login-button" id="join" disabled={isLoading}>
-          { connect ? 'Desconectarme' : 'Conectarme' }
+          { username !== '' ? 'Desconectarme' : 'Conectarme' }
         </button>
       </form>
     </div>

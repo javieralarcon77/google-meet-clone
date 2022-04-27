@@ -10,7 +10,7 @@ import './room-screen.css';
 
 export const RoomScreen = () => {
   const videoContainer = useRef(null)
-  const { submitConnect, participants, room } = useContext(RoomContext)
+  const { disconnectRoom, participants, room, roomData: { label }  } = useContext(RoomContext)
   const { track: trackLocal, handleAudio, handleVideo, mediaStatus} = useVideoLocal(room)
 
   const [trackSelect, setTrackSelect] = useState({username: 'local', track: undefined})
@@ -32,7 +32,7 @@ export const RoomScreen = () => {
   },[trackLocal])
 
   const handleDisconnect = () => {
-    submitConnect()
+    disconnectRoom()
   }
 
   const handleSelect = (track) => {
@@ -59,23 +59,29 @@ export const RoomScreen = () => {
         }
       </div>
       <div className="controls">
-        <button className={`button-icon ${mediaStatus.audio ? '' : 'disabled'}`} onClick={handleAudio}>
-          {
-            mediaStatus.audio
-            ? <img src="/icons/mic.svg" alt="icon-mic"/>
-            : <img src="/icons/mic-mute.svg" alt="icon-mic"/>
-          }
-        </button>
-        <button className={`button-icon ${mediaStatus.video ? '' : 'disabled'}`} onClick={handleVideo}>
-          {
-            mediaStatus.video
-            ? <img src="/icons/camera.svg" alt="icon-camera"/>
-            : <img src="/icons/camera-off.svg" alt="icon-camera"/>
-          }
-        </button>
-        <button className="button-icon logout" onClick={handleDisconnect}>
-          <img src="/icons/logout.svg" alt="icon-logout"/>
-        </button>
+        <div className="hours">16:00</div>
+        <div className="buttons">
+          <button className={`button-icon ${mediaStatus.audio ? '' : 'disabled'}`} onClick={handleAudio}>
+            {
+              mediaStatus.audio
+              ? <img src="/icons/mic.svg" alt="icon-mic"/>
+              : <img src="/icons/mic-mute.svg" alt="icon-mic"/>
+            }
+          </button>
+          <button className={`button-icon ${mediaStatus.video ? '' : 'disabled'}`} onClick={handleVideo}>
+            {
+              mediaStatus.video
+              ? <img src="/icons/camera.svg" alt="icon-camera"/>
+              : <img src="/icons/camera-off.svg" alt="icon-camera"/>
+            }
+          </button>
+          <button className="button-icon logout" onClick={handleDisconnect}>
+            <img src="/icons/logout.svg" alt="icon-logout"/>
+          </button>
+        </div>
+        <div className="room-name">
+          {`${label} (${participants.length + 1})`}
+        </div>
       </div>
     </div>
   )

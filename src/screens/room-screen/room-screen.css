@@ -10,6 +10,7 @@
 #video-principal{
   flex: 1;
   max-height: calc(100vh - 260px);
+  position: relative;
 }
 #video-principal > div {
   display: grid;
@@ -44,6 +45,21 @@
   border: 1px solid var(--gray-dark);
   overflow: hidden;
 }
+.participant .user-icon{
+  height: 140px;
+  display: grid;
+  place-content: center;
+}
+.participant .user-icon div{
+  padding: 10px;
+  background-color: var(--disable);
+  border-radius: 50%;
+}
+.participant .user-icon img{
+  filter: invert();
+  width: 65px;
+}
+
 .participant.select{
   border-color: var(--primary);
 }
@@ -58,9 +74,15 @@
 }
 .controls{
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   height: 50px;
-  padding: 10px 0px;
+  padding: 10px 40px;
+  color: var(--white);
+}
+
+.controls .buttons{
+  display: flex;
 }
 
 .button-icon {
@@ -69,10 +91,14 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: none;
+  border: 1px solid;
   display: grid;
   place-content: center;
   margin: 0px 5px;
+}
+
+.button-icon.disabled {
+  background-color: var(--disable);
 }
 
 .button-icon.logout{

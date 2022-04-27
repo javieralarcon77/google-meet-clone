@@ -1,20 +1,32 @@
 import React, { createContext, useState, useEffect} from 'react'
 import * as Video from 'twilio-video';
 
+const ROOM_DEFAULT = {roomname: 'miduroom', label: 'miduroom'}
+
+const ROOMS = [
+  {roomname: 'room-estudio', label: 'Estudio'},
+  {roomname: 'room-juegos', label: 'Juegos'},
+  {roomname: 'room-manga', label: 'Manga'},
+]
+
 export const RoomContext = createContext({
   connect: false,
   isLoading: false,
   username: undefined,
+  roomname: undefined,
+  roomList: ROOMS,
   participants: [],
 })
 
 export const RoomProvider = ({children}) => {
-  const [connect, setConnect] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
-  const [participants, setParticipants] = useState([])
-
+  const roomList = ROOMS
+  
+  const [isLoading, setIsLoading] = useState(false)
+  const [connect, setConnect] = useState(false)
   const [room, setRoom] = useState(null)
+  const [roomData, setRoomData] = useState(ROOM_DEFAULT)
+  const [participants, setParticipants] = useState([])
 
   useEffect(()=>{
     if (room){
@@ -29,12 +41,15 @@ export const RoomProvider = ({children}) => {
     if (tokenLocal) connectWithLocal(tokenLocal)
   }, [])
 
-  const submitConnect = async (username) => {
-    if (connect) disconnectRoom()
-    else connectRoom(username)
+  const submitConnect = async (user) => {
+    setUsername(username !== '' ? '' : user) 
+  }
+
+  const submitConnectRoom = async (roomTemp) => {
+    connectRoom({username, roomTemp})
   }
   
-  const connectRoom = async (username) => {
+  const connectRoom = async ({username, roomTemp}) => {
     setIsLoading(true)    
     try {
       const url = process.env.NODE_ENV === 'development' ? 'http://localhost:4200' : ''
@@ -43,14 +58,14 @@ export const RoomProvider = ({children}) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({username})
+        body: JSON.stringify({username, roomname: roomTemp.roomname})
       })
     
       const data = await response.json()
       await connectWithToken(data.token)
       localStorage.setItem('username', username)
       localStorage.setItem('token', data.token)
-      setUsername(username)
+      setRoomData(roomTemp)
 
     } catch (e) {
       console.log(e)
@@ -69,6 +84,12 @@ export const RoomProvider = ({children}) => {
     setConnect(true)
     setRoom(newRoom)
     setUsername(localStorage.getItem('username'))
+
+    const { name } = newRoom
+
+    const roomTemp = roomList.find(room => room.roomname === name)
+    if (roomTemp) setRoomData(roomTemp)
+    else setRoomData({ roomname: name, label: name })
   }
 
   const participantConnected = (participant)=> { 
@@ -99,22 +120,25 @@ export const RoomProvider = ({children}) => {
     camOff()
     room.disconnect()
     localStorage.removeItem('token')
-    localStorage.removeItem('username')
     setRoom(null)
     setConnect(false)
-    setUsername('')
+    setRoomData({ roomname: '', label: '' })
     setParticipants([])
   }
 
   return ( 
     <RoomContext.Provider 
       value={{
-        room,
-        connect, 
-        isLoading,
         username, 
+        roomList,
+        isLoading,
+        connect, 
+        room,
+        roomData,
         participants,
         submitConnect,
+        submitConnectRoom,
+        disconnectRoom,
       }}
     >{children}</RoomContext.Provider>
   )
