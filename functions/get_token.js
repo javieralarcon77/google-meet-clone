@@ -14,7 +14,7 @@ exports.handler = async function (context, event, callback) {
   accessToken.identity = event.username
   
   const grant = new twilio.jwt.AccessToken.VideoGrant({
-    room: 'miduroom'
+    room: event.roomname
   })
 
   accessToken.addGrant(grant)
