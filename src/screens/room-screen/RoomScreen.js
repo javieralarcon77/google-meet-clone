@@ -11,8 +11,8 @@ import './room-screen.css';
 
 export const RoomScreen = () => {
   const videoContainer = useRef(null)
-  const { disconnectRoom, participants, room, roomData: { label }  } = useContext(RoomContext)
-  const { track: trackLocal, handleAudio, handleVideo, mediaStatus} = useVideoLocal(room)
+  const { disconnectRoom, participants, roomData: { label }  } = useContext(RoomContext)
+  const { track: trackLocal, handleAudio, handleVideo, mediaStatus} = useVideoLocal()
 
   const [trackSelect, setTrackSelect] = useState({username: 'local', track: undefined})
 
@@ -81,7 +81,7 @@ export const RoomScreen = () => {
           </button>
         </div>
         <div className="room-name">
-          {`${label} (${participants.length + 1})`}
+          {`(${participants.length + 1}) ${label}`}
         </div>
       </div>
     </div>

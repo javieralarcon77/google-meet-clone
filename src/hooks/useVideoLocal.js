@@ -1,13 +1,15 @@
-import { useEffect,useState } from "react"
+import { useEffect,useState,useContext } from "react"
 import * as Video from 'twilio-video';
+import { RoomContext } from "../context/room.context";
 
-export const useVideoLocal = (room) => {
+export const useVideoLocal = () => {
+  const {room, setTrackLocal} = useContext(RoomContext)
   const [track, setTrack] = useState(undefined)
   const [mediaStatus, setMediaStatus] = useState({ audio: true, video: true })
   
   useEffect(()=>{
     //se crea el video local para obtener la camara y un track para la conexion
-    Video.createLocalVideoTrack({ aspectRatio: 4/3 })
+    Video.createLocalVideoTrack({ aspectRatio: 4/3 }).then((track) => setTrackLocal(track))
   },[])
 
   useEffect(()=> {
