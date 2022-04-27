@@ -1,5 +1,9 @@
 import React, { useContext } from 'react'
+
 import { RoomContext } from '../../context/room.context'
+import { RoomItem } from '../room-item/RoomItem'
+
+import './room.css'
 
 export const Room = () => {
 
@@ -12,18 +16,12 @@ export const Room = () => {
   if (username === '') return <></>
 
   return (
-    <div className="card">
+    <div className="card" id="card-rooms">
       <h1>Salas</h1>
       <ul className="rooms">
-        {roomList.map(room => (
-          <li 
-            key={`room-${room.roomname}`} 
-            onClick={() => handleClickRoom(room)}
-            className="room-item"
-          >
-            <div>{room.label}</div>
-          </li>
-        ))}
+        {roomList.map(room => 
+          <RoomItem key={`room-${room.roomname}`} room={room} onClickRoom={handleClickRoom} />
+        )}
       </ul>
     </div>
   )
