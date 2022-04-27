@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect} from 'react'
 import * as Video from 'twilio-video';
+import { getToken } from '../services/getToken.services';
 
 const ROOM_DEFAULT = {roomname: 'miduroom', label: 'miduroom'}
 
@@ -7,6 +8,7 @@ const ROOMS = [
   {roomname: 'room-estudio', label: 'Estudio'},
   {roomname: 'room-juegos', label: 'Juegos'},
   {roomname: 'room-manga', label: 'Manga'},
+  {roomname: 'room-panchito', label: 'Los 5 de panchito'},
 ]
 
 export const RoomContext = createContext({
@@ -27,6 +29,7 @@ export const RoomProvider = ({children}) => {
   const [room, setRoom] = useState(null)
   const [roomData, setRoomData] = useState(ROOM_DEFAULT)
   const [participants, setParticipants] = useState([])
+  const [trackLocal, setTrackLocal] = useState(null)
 
   useEffect(()=>{
     if (room){
@@ -51,25 +54,15 @@ export const RoomProvider = ({children}) => {
   
   const connectRoom = async ({username, roomTemp}) => {
     setIsLoading(true)    
-    try {
-      const url = process.env.NODE_ENV === 'development' ? 'http://localhost:4200' : ''
-      const response = await fetch( url + '/get_token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username, roomname: roomTemp.roomname})
-      })
     
-      const data = await response.json()
-      await connectWithToken(data.token)
+    const token = await getToken({ username, roomname: roomTemp.roomname })
+    if (token ){ 
+      await connectWithToken(token)
       localStorage.setItem('username', username)
-      localStorage.setItem('token', data.token)
+      localStorage.setItem('token', token)
       setRoomData(roomTemp)
-
-    } catch (e) {
-      console.log(e)
     }
+
     setIsLoading(false)
   } 
 
@@ -80,6 +73,7 @@ export const RoomProvider = ({children}) => {
   }
 
   const connectWithLocal = async (token) => {
+    setIsLoading(true)
     const newRoom = await Video.connect(token)
     setConnect(true)
     setRoom(newRoom)
@@ -90,6 +84,7 @@ export const RoomProvider = ({children}) => {
     const roomTemp = roomList.find(room => room.roomname === name)
     if (roomTemp) setRoomData(roomTemp)
     else setRoomData({ roomname: name, label: name })
+    setIsLoading(false)
   }
 
   const participantConnected = (participant)=> { 
@@ -106,10 +101,7 @@ export const RoomProvider = ({children}) => {
   }
 
   const camOff = () => {
-    const video = document.querySelector('#participant-local video')
-    video.pause()
-    video.srcObject.getTracks()[0].stop()
-
+    trackLocal.mediaStreamTrack.stop()
     room.localParticipant.videoTracks.forEach(publication => {
       publication.unpublish();
       publication.track.stop();
@@ -139,6 +131,7 @@ export const RoomProvider = ({children}) => {
         submitConnect,
         submitConnectRoom,
         disconnectRoom,
+        setTrackLocal,
       }}
     >{children}</RoomContext.Provider>
   )
