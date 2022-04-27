@@ -12,7 +12,7 @@ export const useVideoLocal = (room) => {
 
   useEffect(()=> {
     if (room) {
-      console.log({room})
+      //console.log({room})
       //una vez obtenido el room se toma el track del participante local para obtener el id remoto del track
       const tracks = Array.from(room.localParticipant.videoTracks.values())
       setTrack(tracks[0].track)

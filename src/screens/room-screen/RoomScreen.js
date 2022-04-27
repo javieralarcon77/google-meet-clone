@@ -5,6 +5,7 @@ import { useVideoLocal } from '../../hooks/useVideoLocal'
 
 import { ParticipantLocal } from '../../components/participant-local/ParticipantLocal'
 import { Participant } from '../../components/participant/Participant'
+import { Hour } from '../../components/hour/Hour'
 
 import './room-screen.css';
 
@@ -59,7 +60,7 @@ export const RoomScreen = () => {
         }
       </div>
       <div className="controls">
-        <div className="hours">16:00</div>
+        <Hour />
         <div className="buttons">
           <button className={`button-icon ${mediaStatus.audio ? '' : 'disabled'}`} onClick={handleAudio}>
             {
