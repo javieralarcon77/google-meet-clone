@@ -4,7 +4,7 @@ export const Hour = () => {
   const [timeString, setTimeString] = useState('');
 
   const champ = (number) => {
-    return number < 10 ? `0 ${number}` : number
+    return number < 10 ? `0${number}` : number
   }
 
   const calculateTime = () => {
